@@ -13,11 +13,11 @@ def parse_issue_body(body):
     original_url = None
     custom_alias = None
     
-    url_match = re.search(r"### URL Gốc\s+(https?://[^\s]+)", body)
+    url_match = re.search(r"### (?:URL Gốc|Original URL)\s+(https?://[^\s]+)", body)
     if url_match:
         original_url = url_match.group(1).strip()
         
-    alias_match = re.search(r"### Bí Danh Tùy Chỉnh \(Tùy chọn\)\s+([^\s]+)", body)
+    alias_match = re.search(r"### (?:Bí Danh Tùy Chỉnh \(Tùy chọn\)|Custom Alias)\s+([^\s]+)", body)
     if alias_match and alias_match.group(1).strip() != "_No response_":
         custom_alias = alias_match.group(1).strip()
         

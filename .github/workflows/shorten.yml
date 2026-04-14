@@ -1,0 +1,68 @@
+name: Process New Short Link
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  shorten:
+    if: contains(github.event.issue.labels.*.name, 'new-link')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Process Issue and Update Repo
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_USER: ${{ github.event.issue.user.login }}
+        run: python .github/scripts/process.py
+        
+      - name: Read Short ID
+        id: read_id
+        run: |
+          if [ -f "SHORT_ID.txt" ]; then
+            echo "short_id=$(cat SHORT_ID.txt)" >> $GITHUB_OUTPUT
+            rm SHORT_ID.txt
+          fi
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add s/ links.json
+          git commit -m "Auto-generate short link from Issue #${{ github.event.issue.number }}" || exit 0
+          git push
+          
+      - name: Comment on Issue and Close
+        uses: actions/github-script@v6
+        if: steps.read_id.outputs.short_id != ''
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.issue.number;
+            const repoOwner = context.repo.owner;
+            const repoName = context.repo.repo;
+            const shortId = '${{ steps.read_id.outputs.short_id }}';
+            
+            await github.rest.issues.createComment({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: issueNumber,
+              body: `🎉 Chúc mừng! Đường dẫn của bạn đã được hệ thống tạo thành công.\n\nLink rút gọn của bạn là: **https://${repoOwner}.github.io/${repoName}/s/${shortId}**\n\nBạn có thể quay lại trang chủ để xem danh sách.`
+            });
+            await github.rest.issues.update({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: issueNumber,
+              state: "closed"
+            });

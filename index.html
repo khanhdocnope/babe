@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rút Gọn URL - Static System</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+      window.getGitHubUrlInfo = function() {
+        let host = window.location.hostname;
+        if (host.endsWith('github.io')) {
+           let username = host.split('.')[0];
+           let path = window.location.pathname.split('/')[1] || '';
+           return username + "/" + path;
+        }
+        return "VUI_LONG_THAY_DOI/TEN_REPO"; 
+      };
+    </script>
+  </head>
+  <body>
+    <div class="theme-toggle">
+      <button id="darkModeToggle" class="theme-btn" title="Toggle Dark Mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay" hidden>
+      <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+      <header class="hero-header">
+        <div class="hero-content">
+          <h1 class="hero-title">🔗 Rút Gọn URL</h1>
+          <p class="hero-subtitle">
+            Hệ thống tĩnh bảo mật chạy 100% trên GitHub
+          </p>
+        </div>
+      </header>
+
+      <main>
+        <section class="section shorten-section">
+          <h2>Tạo Liên Kết Mới</h2>
+          <form id="shortenForm" class="form">
+            <div class="form-group">
+              <label for="urlInput">Nhập URL dài của bạn</label>
+              <input
+                type="url"
+                id="urlInput"
+                placeholder="https://example.com/duong/dan/rat/dai"
+                required
+              />
+            </div>
+
+            <div class="advanced-options">
+              <button type="button" class="toggle-btn" id="advancedToggle">
+                ⚙️ Tùy Chọn Nâng Cao
+              </button>
+              <div id="advancedContent" class="advanced-content" hidden>
+                <div class="form-group">
+                  <label for="customAlias">Bí Danh Tùy Chỉnh (Không bắt buộc)</label>
+                  <input
+                    type="text"
+                    id="customAlias"
+                    placeholder="lien-ket-tuy-chinh"
+                  />
+                  <small>Chỉ sử dụng chữ cái, số và dấu gạch ngang</small>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Gửi Yêu Cầu Rút Gọn</button>
+            <small style="display:block; text-align:center; margin-top:10px; opacity:0.8;">Hệ thống sẽ chuyển bạn sang GitHub Issues để tạo link tự động.</small>
+          </form>
+        </section>
+
+        <section class="section links-history glass-card">
+          <div class="history-header">
+            <h2>📊 Danh Sách Liên Kết Gần Đây</h2>
+            <button id="refreshLinksBtn" class="btn btn-small">
+              🔄 Làm Mới
+            </button>
+          </div>
+          <div id="linksList" class="links-table-container">
+            <p class="empty-state">
+              Đang tải danh sách liên kết...
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <div id="errorToast" class="toast toast-error" hidden></div>
+      <div id="successToast" class="toast toast-success" hidden></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

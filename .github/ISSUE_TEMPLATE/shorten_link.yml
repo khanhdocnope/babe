@@ -1,0 +1,21 @@
+name: 🔗 Tạo Rút Gọn Mới
+description: Gửi một URL dài để hệ thống tự động rút gọn.
+title: "Tạo link rút gọn mới"
+labels: ["new-link"]
+body:
+  - type: input
+    id: original_url
+    attributes:
+      label: URL Gốc
+      description: Nhập đường dẫn bạn muốn rút gọn (Bắt buộc phải có http:// hoặc https://)
+      placeholder: https://example.com/duong/dan/rat/dai
+    validations:
+      required: true
+  - type: input
+    id: custom_alias
+    attributes:
+      label: Bí Danh Tùy Chỉnh (Tùy chọn)
+      description: Tên rút gọn bạn muốn (VD: "bai-tap-1"). Nếu để trống, hệ thống sẽ tự sinh. Không dùng ký tự đặc biệt.
+      placeholder: bai-tap-1
+    validations:
+      required: false

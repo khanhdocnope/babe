@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+
+# Node
+node_modules/
+dist/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Backup folder (optional to ignore, but good to keep local)
+source_backup/

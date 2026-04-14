@@ -49,6 +49,12 @@ closeSettingsModal.addEventListener("click", () => {
     settingsModal.hidden = true;
 });
 
+settingsModal.addEventListener("click", (e) => {
+    if (e.target === settingsModal) {
+        settingsModal.hidden = true;
+    }
+});
+
 saveSettingsBtn.addEventListener("click", () => {
     localStorage.setItem("githubToken", githubTokenInput.value.trim());
     settingsModal.hidden = true;

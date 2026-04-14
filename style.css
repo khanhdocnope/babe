@@ -1170,3 +1170,7 @@ body.dark-mode .links-table {
 .loading-overlay[hidden] {
   display: none !important;
 }
+
+[hidden] {
+  display: none !important;
+}
